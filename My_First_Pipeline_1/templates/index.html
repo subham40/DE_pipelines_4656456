@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload File</title>
+    <!-- Include Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f8f9fa;
+        }
+        .header {
+            background-color: #007bff;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        .container {
+            margin-top: 50px;
+        }
+        .form-group {
+            margin-top: 20px;
+        }
+        .btn-primary {
+            background-color: #007bff;
+            border: none;
+        }
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Basu Data Upload Project</h1>
+    </div>
+    <div class="container">
+        <h2 class="text-center">Upload File to Google Cloud Storage</h2>
+        <div class="card shadow-sm p-4">
+            <form id="uploadForm" action="/" method="post" enctype="multipart/form-data">
+                <div class="form-group">
+                    <input type="file" class="form-control-file" id="fileInput" name="file" required>
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">Upload</button>
+            </form>
+            <!-- Progress Bar -->
+            <div class="progress mt-3" style="display: none;" id="progressBarContainer">
+                <div class="progress-bar" id="progressBar" role="progressbar" style="width: 0%;">0%</div>
+            </div>
+            <!-- File Upload Status -->
+            <div class="alert alert-success mt-3" style="display: none;" id="uploadStatus"></div>
+        </div>
+    </div>
+
+    <!-- Include Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script>
+        document.getElementById('uploadForm').onsubmit = function(event) {
+            event.preventDefault();  // Prevent form submission
+
+            var fileInput = document.getElementById('fileInput');
+            var file = fileInput.files[0];
+
+            if (file) {
+                var formData = new FormData();
+                formData.append('file', file);
+
+                var xhr = new XMLHttpRequest();
+                xhr.open('POST', '/', true);
+
+                // Show progress bar
+                document.getElementById('progressBarContainer').style.display = 'block';
+                xhr.upload.onprogress = function(event) {
+                    if (event.lengthComputable) {
+                        var percentComplete = (event.loaded / event.total) * 100;
+                        var progressBar = document.getElementById('progressBar');
+                        progressBar.style.width = percentComplete + '%';
+                        progressBar.textContent = Math.round(percentComplete) + '%';
+                    }
+                };
+
+                xhr.onload = function() {
+                    if (xhr.status == 200) {
+                        // Display success message
+                        var uploadStatus = document.getElementById('uploadStatus');
+                        uploadStatus.style.display = 'block';
+                        uploadStatus.textContent = 'File uploaded successfully!';
+                    } else {
+                        alert('File upload failed.');
+                    }
+                };
+
+                xhr.send(formData);
+            } else {
+                alert('Please select a file.');
+            }
+        };
+    </script>
+</body>
+</html>
