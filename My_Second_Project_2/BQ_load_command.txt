@@ -1,0 +1,1 @@
+bq load --source_format=CSV --skip_leading_rows=1 New_DataSet_Increamental.Credit_Table gs://new89898978/incremental_dummy_data.csv
