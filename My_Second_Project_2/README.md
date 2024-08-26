@@ -2,90 +2,67 @@
 
 ## Overview
 
-This project demonstrates how to generate dummy data, handle incremental updates, and process data using Google Cloud Platform (GCP). It includes a script to generate initial and incremental data and a Google Cloud Function to process these data updates.
+This project demonstrates how to handle incremental data updates and process data using Google Cloud Platform (GCP). It includes a script to generate and manage data, and a Google Cloud Function to process and merge data updates into a BigQuery dataset.
 
 ## Table of Contents
 
-1. [Initial and Incremental Data Generation](#initial-and-incremental-data-generation)
+1. [Initial and Incremental Data](#initial-and-incremental-data)
 2. [Cloud Function for Data Processing](#cloud-function-for-data-processing)
-3. [Additional Tips](#additional-tips)
-4. [Performance Considerations](#performance-considerations)
-5. [Setup and Usage](#setup-and-usage)
-6. [License](#license)
+3. [Performance Considerations](#performance-considerations)
+4. [Setup and Usage](#setup-and-usage)
+5. [License](#license)
 
-## Initial and Incremental Data Generation
+## Initial and Incremental Data
 
 ### Overview
 
-The script generates two types of data:
+- **Initial Data**: A set of dummy records is generated and saved to a CSV file. This data includes customer details and account information.
+- **Incremental Data**: Additional dummy records are generated to simulate updates or new records. This data may reuse existing customer IDs and account numbers to reflect realistic scenarios.
 
-- **Initial Data**: Generates a set number of initial dummy records and saves them to a CSV file.
-- **Incremental Data**: Generates additional dummy records, with a chance to reuse existing records, and saves them to a separate CSV file.
+### Data Structure
 
-### Script Details
-
-#### Generate Initial Data:
-
-- Generates `num_records` of initial dummy data.
-- Each record includes `customer_id`, `account_number`, `credit_score`, `account_balance`, and `last_modified`.
-- Saves the data to `dummy_data.csv`.
-
-#### Track Existing Data:
-
-- Uses a dictionary (`customer_data`) to keep track of existing `customer_id` and `account_number` pairs.
-
-#### Generate Incremental Data:
-
-- Generates `num_incremental_records` of additional dummy data.
-- Reuses existing `customer_id` with a 50% chance to simulate updates or additional accounts.
-- Saves the incremental data to `incremental_dummy_data.csv`.
-
-### Additional Tips
-
-- **Ensure Unique Account Numbers**: Modify the `generate_dummy_data` function to ensure unique `account_number` values.
-- **Variable Chance for Reuse**: Adjust the probability for reusing `customer_id` as needed.
-- **Handling Overlaps**: Ensure that incremental data does not overwrite existing records unintentionally.
-- **Extend Functionality**: Add functionality for different types of updates or deletions.
+- `customer_id`: Unique identifier for the customer.
+- `account_number`: Unique identifier for the account.
+- `credit_score`: Credit score of the account.
+- `account_balance`: Balance of the account.
+- `last_modified`: Timestamp of the last update to the account information.
 
 ## Cloud Function for Data Processing
 
 ### Overview
 
-The provided Cloud Function is triggered by changes in a Google Cloud Storage bucket. It processes the incremental data and merges it into a BigQuery dataset.
+The Cloud Function is triggered by changes in a Google Cloud Storage bucket. It processes incremental data and merges it into a BigQuery dataset.
 
 ### Function Details
 
-- **Trigger**:
-  - The function is triggered by changes in a Cloud Storage bucket.
-  - Logs event details including bucket name, file name, and timestamps.
-
+- **Trigger**: Activated by file uploads to a specified Cloud Storage bucket.
 - **Process Incremental Data**:
-  - Loads new data into a BigQuery staging table.
-  - Merges the data from the staging table into the main table, updating or inserting records as necessary.
-  - Drops the staging table after processing.
+  - Loads data into a BigQuery staging table.
+  - Merges data from the staging table into the main table, handling updates and new records.
+  - Cleans up the staging table after processing.
 
 ## Performance Considerations
 
-- **Scalability**: Ensure the system scales effectively with increasing data volume.
-- **Error Handling**: Implement error handling and logging for robustness.
-- **Testing**: Perform thorough testing with various data volumes and scenarios.
+- **Scalability**: Ensure that the system can handle increasing data volumes efficiently.
+- **Error Handling**: Implement robust error handling and logging mechanisms.
+- **Testing**: Conduct thorough testing with different data sizes and scenarios to ensure reliability.
 
 ## Setup and Usage
 
-### Initial Data Generation
+### Initial Data
 
-1. Update `num_records` and `num_incremental_records` as needed.
-2. Run the script to generate `dummy_data.csv` and `incremental_dummy_data.csv`.
+1. Generate the initial and incremental data files as needed.
+2. Ensure these files are placed in the Google Cloud Storage bucket that triggers the Cloud Function.
 
 ### Cloud Function
 
 1. Deploy the Cloud Function to GCP.
-2. Configure a Google Cloud Storage bucket to trigger the function.
+2. Configure the Google Cloud Storage bucket to trigger the function on file uploads.
 
 ### BigQuery
 
-1. Ensure the dataset and table names match those specified in the script.
+1. Ensure that your BigQuery dataset and table names align with those specified in the Cloud Function script.
 
 ## License
 
-This project is licensed under the [MIT License](LICENSE).
+This project is licensed under the MIT License.
