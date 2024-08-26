@@ -10,7 +10,6 @@ This project demonstrates how to handle incremental data updates and process dat
 2. [Cloud Function for Data Processing](#cloud-function-for-data-processing)
 3. [Performance Considerations](#performance-considerations)
 4. [Setup and Usage](#setup-and-usage)
-5. [License](#license)
 
 ## Initial and Incremental Data
 
@@ -63,6 +62,3 @@ The Cloud Function is triggered by changes in a Google Cloud Storage bucket. It 
 
 1. Ensure that your BigQuery dataset and table names align with those specified in the Cloud Function script.
 
-## License
-
-This project is licensed under the MIT License.
