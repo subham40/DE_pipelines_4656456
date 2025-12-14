@@ -1,0 +1,7 @@
+version: 2
+sources:
+  - name: public_bikeshare
+    database: bigquery-public-data # The free project ID
+    schema: austin_bikeshare # The free dataset name
+    tables:
+      - name: bikeshare_trips
